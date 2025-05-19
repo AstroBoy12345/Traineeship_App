@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traineeship Portal</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('/library.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            color: #333;
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .navbar a,
+        .navbar button {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .navbar button {
+            float: right;
+            background-color: #5c67f2;
+            margin-right: 10px;
+            border-radius: 5px;
+            padding: 7px;
+            margin-top: 7px;
+            margin-bottom: 7px;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 100px auto 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        form label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        form button[type="submit"] {
+            margin-top: 15px;
+            background-color: #5c67f2;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        form button[type="submit"]:hover {
+            background-color: #4a52c4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+
+    <button th:onclick="'window.location.href=\'' + @{/auth/logout} + '\''">
+        Logout
+    </button>
+
+    <button th:onclick="'window.location.href=\'' + @{/company/addtraineeship} + '\''">
+        Add New Traineeship
+    </button>
+
+    <button th:onclick="'window.location.href=\'' + @{/company/companyprofile} + '\''">
+        Profile
+    </button>
+</div>
+
+<main>
+    <h2>Your Company Profile</h2>
+    <form th:action="@{/company/companyprofile/save}" th:object="${company}" method="post">
+        <label>Company Name:</label>
+        <input type="text" th:field="*{companyName}" required />
+
+        <label>Location:</label>
+        <select th:field="*{companyLocation}" required>
+            <option value="">-- Select Location --</option>
+            <option value="Athens">Athens</option>
+            <option value="Ioannina">Ioannina</option>
+            <option value="Thessaloniki">Thessaloniki</option>
+        </select>
+
+        <button type="submit">Save Profile</button>
+    </form>
+</main>
+
+</body>
+</html>

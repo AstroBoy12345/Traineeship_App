@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students Looking for Traineeship</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('/library.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            color: #333;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .navbar a,
+        .navbar button {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .navbar button {
+            float: right;
+            background-color: #5c67f2;
+            margin-right: 10px;
+            border-radius: 5px;
+            padding: 7px 14px;
+            margin-top: 7px;
+            margin-bottom: 7px;
+        }
+
+        main {
+            max-width: 95%;
+            margin: 100px auto 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .select-button {
+            padding: 6px 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .select-button:hover {
+            background-color: #218838;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        .no-results {
+            margin-top: 20px;
+            font-style: italic;
+            color: #555;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <button th:onclick="'window.location.href=\'' + @{/auth/logout} + '\''">Logout</button>
+</div>
+
+<main>
+    <h2>📋 Students Looking for Traineeship</h2>
+
+    <div th:if="${students.size() == 0}" class="no-results">
+        No students found.
+    </div>
+
+    <table th:if="${students.size() > 0}">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Student Name</th>
+                <th>AM</th>
+                <th>Average Grade</th>
+                <th>Preferred Location</th>
+                <th>Interests</th>
+                <th>Skills</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="student : ${students}">
+                <td th:text="${student.username}">username</td>
+                <td th:text="${student.studentName}">name</td>
+                <td th:text="${student.AM}">AM</td>
+                <td th:text="${student.avgGrade}">grade</td>
+                <td th:text="${student.preferredLocation}">location</td>
+                <td th:text="${student.interests}">interests</td>
+                <td th:text="${student.skills}">skills</td>
+                <td>
+                    <form th:action="@{/committee/dashboard/positions}" method="get">
+                        <input type="hidden" name="studentUsername" th:value="${student.username}" />
+                        <button type="submit" class="select-button">Select</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="text-align: center;">
+        <a th:href="@{/committee/dashboard}" class="back-button">← Back to Dashboard</a>
+    </div>
+</main>
+
+</body>
+</html>

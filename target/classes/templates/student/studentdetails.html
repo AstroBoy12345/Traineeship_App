@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Profile</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('/library.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 100%;
+            z-index: 1;
+        }
+
+        h2 {
+            text-align: center;
+            color: #222;
+        }
+
+        form label {
+            margin-top: 15px;
+            display: block;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px;
+            width: 100%;
+            background-color: #5c67f2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4a52c4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Create Your Student Profile</h2>
+
+        <form th:action="@{/student/details/save}" method="post" th:object="${student}">
+            <label>Full Name:</label>
+            <input type="text" th:field="*{studentName}" required />
+
+            <label>University ID:</label>
+            <input type="text" th:field="*{AM}" required />
+
+            <label>Average Grade:</label>
+            <input type="number" th:field="*{avgGrade}" step="0.01" min="0" max="10" required />
+
+            <label>List of Interests:</label>
+            <input type="text" th:field="*{interests}" required />
+
+            <label>List of Skills:</label>
+            <input type="text" th:field="*{skills}" required />
+
+            <label>Preferred Location:</label>
+            <select th:field="*{preferredLocation}" required>
+                <option value="">-- Select Location --</option>
+                <option value="Athens">Athens</option>
+                <option value="Ioannina">Ioannina</option>
+                <option value="Thessaloniki">Thessaloniki</option>
+            </select>
+
+            <label>Are you looking for a traineeship?</label>
+            <select th:field="*{lookingForTraineeship}" required>
+                <option th:value="true">Yes</option>
+                <option th:value="false">No</option>
+            </select>
+
+            <button type="submit">Save Profile</button>
+        </form>
+    </div>
+
+</body>
+</html>

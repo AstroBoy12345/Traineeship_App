@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supervised Traineeship Positions</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('/library.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            color: #333;
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .navbar a,
+        .navbar button {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .navbar button {
+            float: right;
+            background-color: #5c67f2;
+            margin-right: 10px;
+            border-radius: 5px;
+            padding: 7px;
+            margin-top: 7px;
+            margin-bottom: 7px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 100px auto 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            color: #2c3e50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .message {
+            color: red;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: #5c67f2;
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <button th:onclick="'window.location.href=\'' + @{/auth/logout} + '\''" 
+            style="float:right; margin-right:10px; background-color:#5c67f2; color:white; padding:5px; border:none; border-radius:5px; cursor:pointer; font-size:16px;">
+        Logout
+    </button>
+</div>
+
+<main>
+    <h2>Supervised Traineeship Positions</h2>
+
+    <div th:if="${#lists.isEmpty(positions)}" class="message">
+        Δεν έχετε καμία θέση πρακτικής υπό επίβλεψη.
+    </div>
+
+    <table th:if="${!#lists.isEmpty(positions)}">
+        <thead>
+            <tr>
+                <th>Τίτλος</th>
+                <th>Φοιτητής</th>
+                <th>Company</th>
+                <th>Θέματα</th>
+                <th>Ημερομηνία Έναρξης</th>
+                <th>Ημερομηνία Λήξης</th>
+                <th>Ενέργειες</th> <!-- Νέα στήλη -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="position : ${positions}">
+                <td th:text="${position.title}">Τίτλος</td>
+                <td th:text="${position.student.studentName}">Φοιτητής</td>
+                <td th:text="${position.company.companyName}">Company</td>
+                <td th:text="${position.topics}">Θέματα</td>
+                <td th:text="${#temporals.format(position.fromDate, 'dd/MM/yyyy')}">Ημ. Έναρξης</td>
+                <td th:text="${#temporals.format(position.toDate, 'dd/MM/yyyy')}">Ημ. Λήξης</td>
+                <td>
+                    <button th:onclick="'window.location.href=\'' + @{/professor/dashboard/positions/evaluate/{id}(id=${position.id})} + '\''"
+                            style="padding: 8px 12px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Evaluate
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</main>
+
+</body>
+</html>
+
+
