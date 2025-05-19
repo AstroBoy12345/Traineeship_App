@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Traineeship Positions</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('/library.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            color: #333;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .navbar a,
+        .navbar button {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .navbar button {
+            float: right;
+            background-color: #5c67f2;
+            margin-right: 10px;
+            border-radius: 5px;
+            padding: 7px;
+            margin-top: 7px;
+            margin-bottom: 7px;
+        }
+
+        main {
+            max-width: 90%;
+            margin: 100px auto 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .message {
+            color: green;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .no-results {
+            margin-top: 20px;
+            font-style: italic;
+            color: #555;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        form {
+            display: inline;
+        }
+
+        button.delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button.delete-btn:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <button th:onclick="'window.location.href=\'' + @{/auth/logout} + '\''">Logout</button>
+    <button th:onclick="'window.location.href=\'' + @{/company/addtraineeship} + '\''">Add New Traineeship</button>
+    <button th:onclick="'window.location.href=\'' + @{/company/companyprofile} + '\''">Profile</button>
+</div>
+
+<main>
+    <h2>Διαγραφή Θέσεων Πρακτικής</h2>
+
+    <div th:if="${successMessage}" class="message" th:text="${successMessage}"></div>
+
+    <div th:if="${positions.size() == 0}" class="no-results">
+        There are no available positions to delete.    
+    </div>
+
+    <table th:if="${positions.size() > 0}">
+        <thead>
+            <tr>
+                <th>Τίτλος</th>
+                <th>Περιγραφή</th>
+                <th>Δεξιότητες</th>
+                <th>Ενέργειες</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="position : ${positions}">
+                <td th:text="${position.title}">Τίτλος</td>
+                <td th:text="${position.description}">Περιγραφή</td>
+                <td th:text="${position.skills}">Δεξιότητες</td>
+                <td>
+                    <form th:action="@{/company/dashboard/positions/delete}" method="post">
+                        <input type="hidden" name="id" th:value="${position.id}" />
+                        <button type="submit" class="delete-btn"
+                                onclick="return confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή τη θέση;')">
+                            Διαγραφή
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</main>
+
+</body>
+</html>
+

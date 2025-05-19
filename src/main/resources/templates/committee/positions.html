@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Positions Dashboard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url('/library.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            color: #333;
+            position: relative;
+            
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            background-color: #333;
+            padding: 0 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .navbar a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .navbar button {
+            background-color: #5c67f2;
+            border-radius: 5px;
+            padding: 7px 14px;
+            margin: 7px 0;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+
+        main {
+            max-width:80%;
+            margin: 100px auto 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        select, input[type="submit"], button {
+            padding: 10px;
+            margin-top: 5px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .position-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .assign-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .assign-button:hover {
+            background-color: #218838;
+        }
+
+        .message {
+            padding: 12px;
+            text-align: center;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .no-results {
+            margin-top: 20px;
+            font-style: italic;
+            color: #555;
+            text-align: center;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div style="margin-left:auto;">
+        <button th:onclick="'window.location.href=\'' + @{/auth/logout} + '\''">Logout</button>
+    </div>
+</div>
+
+<main>
+    <h2>📌 Traineeship Positions</h2>
+
+    <div th:if="${successMessage}" class="message success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="message error" th:text="${errorMessage}"></div>
+
+    <form th:action="@{/committee/dashboard/positions}" method="get">
+        <input type="hidden" name="studentUsername" th:value="${studentUsername}" />
+        <label for="strategy">Filter Positions By:</label>
+        <select id="strategy" name="strategy">
+            <option value="all" th:selected="${strategy == 'all'}">All Positions</option>
+            <option value="location" th:selected="${strategy == 'location'}">Location</option>
+            <option value="interests" th:selected="${strategy == 'interests'}">Interests</option>
+            <option value="composite" th:selected="${strategy == 'composite'}">Composite</option>
+        </select>
+        <br><br>
+        <button type="submit" class="assign-button">🔍 Search</button>
+    </form>
+
+    <div th:if="${positions != null and !positions.isEmpty()}">
+        <div th:each="position : ${positions}" class="position-card">
+            <h3 th:text="${position.title}">Position Title</h3>
+            <p th:text="${position.description}">Description</p>
+            <p><strong>Topics:</strong> <span th:text="${position.topics}">topics</span></p>
+            <form th:action="@{/committee/assign}" method="post">
+                <input type="hidden" name="positionId" th:value="${position.id}" />
+                <input type="hidden" name="studentUsername" th:value="${studentUsername}" />
+                <button type="submit" class="assign-button">Assign Student</button>
+            </form>
+        </div>
+    </div>
+
+    <div th:if="${positions == null or positions.isEmpty()}" class="no-results">
+        ❌ No available positions.
+    </div>
+
+    <div style="text-align: center;">
+        <a th:href="@{/committee/dashboard}" class="back-button">← Back to Dashboard</a>
+    </div>
+</main>
+
+</body>
+</html>
